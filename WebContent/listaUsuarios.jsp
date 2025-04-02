@@ -6,8 +6,9 @@
 <head>
 <meta charset="UTF-8">
 <title>Lista de usuários</title>
+<%@ include file="header.jsp" %>
 </head>
 <body>
-
+<%@ include file="footer.jsp" %>
 </body>
 </html>
