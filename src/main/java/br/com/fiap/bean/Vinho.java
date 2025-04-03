@@ -5,8 +5,8 @@ public class Vinho {
 	private String nomeVinho;
 	private String fotoVinho;
 	private double preco;
-	private double desconto;
 	private String nomeVinicola;
+	private String cidade;
 	private String teorAlcoolico;
 	private String docura;
 	private String fotoBandeira;
@@ -14,14 +14,15 @@ public class Vinho {
 	private int quantidadeDisponivel;
 	
 	public Vinho(){}	
-	public Vinho(int idVinho, String nomeVinho, String fotoVinho, double preco, double desconto, String nomeVinicola,
+	
+	public Vinho(int idVinho, String nomeVinho, String fotoVinho, double preco, String nomeVinicola, String cidade,
 			String teorAlcoolico, String docura, String fotoBandeira, String blend, int quantidadeDisponivel) {
 		this.idVinho = idVinho;
 		this.nomeVinho = nomeVinho;
 		this.fotoVinho = fotoVinho;
 		this.preco = preco;
-		this.desconto = desconto;
 		this.nomeVinicola = nomeVinicola;
+		this.cidade = cidade;
 		this.teorAlcoolico = teorAlcoolico;
 		this.docura = docura;
 		this.fotoBandeira = fotoBandeira;
@@ -52,17 +53,17 @@ public class Vinho {
 	public void setPreco(double preco) {
 		this.preco = preco;
 	}
-	public double getDesconto() {
-		return desconto;
-	}
-	public void setDesconto(double desconto) {
-		this.desconto = desconto;
-	}
 	public String getNomeVinicola() {
 		return nomeVinicola;
 	}
 	public void setNomeVinicola(String nomeVinicola) {
 		this.nomeVinicola = nomeVinicola;
+	}
+	public String getCidade() {
+		return cidade;
+	}
+	public void setCidade(String cidade) {
+		this.cidade = cidade;
 	}
 	public String getTeorAlcoolico() {
 		return teorAlcoolico;
