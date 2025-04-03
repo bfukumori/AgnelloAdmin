@@ -4,13 +4,13 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Criar usuário</title>
+<title>Criar vinho</title>
 <%@ include file="header.jsp"%>
 </head>
 <body>
 	<%@ include file="menu.jsp"%>
 	<div class="container">
-		<h1>Cadastro de Usuário</h1>
+		<h1>Cadastro de Vinho</h1>
 		<form action="usuarios" method="post">
 			<div class="form-group">
 				<label for="id-nome">Nome</label> <input type="text" name="nome"
