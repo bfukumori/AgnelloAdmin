@@ -19,24 +19,17 @@ public class UsuarioServlet extends HttpServlet {
 
 	public UsuarioServlet() {
 		super();
-		try {
-			this.usuarioDao = new UsuarioDAO();
-		} catch (SQLException e) {
-			throw new RuntimeException("Erro ao conectar ao banco", e);
-		}
+		this.usuarioDao = new UsuarioDAO();
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		response.setContentType("application/json");
-		response.setCharacterEncoding("UTF-8");
-
 		try {
 			List<Usuario> usuarios = usuarioDao.getAll();
 			request.setAttribute("usuarios", usuarios);
 			request.getRequestDispatcher("listaUsuarios.jsp").forward(request, response);
-
 		} catch (SQLException e) {
+			System.out.println(e);
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Erro ao buscar usuários");
 		}
 	}
@@ -62,8 +55,9 @@ public class UsuarioServlet extends HttpServlet {
 			usuarioDao.create(usuario);
 			response.setStatus(HttpServletResponse.SC_CREATED);
 			request.setAttribute("successMsg", "Usuário cadastrado com sucesso!");
-			response.sendRedirect("usuarios");
+			request.getRequestDispatcher("criarUsuario.jsp").forward(request, response);
 		} catch (SQLException e) {
+			System.out.println(e);
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Erro ao criar usuário");
 		}
 	}

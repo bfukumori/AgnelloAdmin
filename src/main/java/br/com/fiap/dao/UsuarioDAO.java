@@ -13,32 +13,22 @@ import br.com.fiap.exception.NotFoundException;
 import br.com.fiap.factory.ConnectionFactory;
 
 public class UsuarioDAO {
-	private static Connection connection;
-
-	public UsuarioDAO() throws SQLException {
-		connection = ConnectionFactory.getConnection();
-	}
-
-	public void closeConnection() throws SQLException {
-		if (connection != null && !connection.isClosed()) {
-			connection.close();
-		}
-	}
 
 	private Usuario parseUser(ResultSet result) throws SQLException {
-		int idUsuario = result.getInt("idUsuario");
+		int idUsuario = result.getInt("id_usuario");
 		String nome = result.getString("nome");
 		String email = result.getString("email");
 		String celular = result.getString("celular");
 		int role = result.getInt("role");
-		Date dataAniversario = result.getDate("dataAniversario");
+		Date dataAniversario = result.getDate("data_aniversario");
 		return new Usuario(idUsuario, nome, email, celular, role, dataAniversario);
 	}
 
 	public void create(Usuario usuario) throws SQLException {
 		String sql = "INSERT INTO usuarios (nome, email, celular, senha, role, data_aniversario) VALUES (?, ?, ?, ?, ?, ?)";
 
-		try (PreparedStatement stm = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
+		try (Connection connection = ConnectionFactory.getConnection();
+				PreparedStatement stm = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
 			stm.setString(1, usuario.getNome());
 			stm.setString(2, usuario.getEmail());
 			stm.setString(3, usuario.getCelular());
@@ -62,7 +52,8 @@ public class UsuarioDAO {
 	public Usuario getById(int id) throws SQLException, NotFoundException {
 		String sql = "SELECT * FROM usuarios WHERE id_usuario = ?";
 
-		try (PreparedStatement stm = connection.prepareStatement(sql)) {
+		try (Connection connection = ConnectionFactory.getConnection();
+				PreparedStatement stm = connection.prepareStatement(sql)) {
 			stm.setInt(1, id);
 			ResultSet result = stm.executeQuery();
 
@@ -78,7 +69,9 @@ public class UsuarioDAO {
 		String sql = "SELECT * FROM usuarios";
 		List<Usuario> users = new ArrayList<>();
 
-		try (PreparedStatement stm = connection.prepareStatement(sql); ResultSet result = stm.executeQuery()) {
+		try (Connection connection = ConnectionFactory.getConnection();
+				PreparedStatement stm = connection.prepareStatement(sql);
+				ResultSet result = stm.executeQuery()) {
 
 			while (result.next()) {
 				users.add(parseUser(result));
@@ -91,7 +84,8 @@ public class UsuarioDAO {
 	public void update(Usuario user) throws SQLException, NotFoundException {
 		String sql = "UPDATE usuarios SET nome = ?, email = ?, celular = ? WHERE id_usuario = ?";
 
-		try (PreparedStatement stm = connection.prepareStatement(sql)) {
+		try (Connection connection = ConnectionFactory.getConnection();
+				PreparedStatement stm = connection.prepareStatement(sql)) {
 			stm.setString(1, user.getNome());
 			stm.setString(2, user.getEmail());
 			stm.setString(3, user.getCelular());
@@ -108,7 +102,8 @@ public class UsuarioDAO {
 	public void delete(int id) throws SQLException, NotFoundException {
 		String sql = "DELETE FROM usuarios WHERE id_usuario = ?";
 
-		try (PreparedStatement stm = connection.prepareStatement(sql)) {
+		try (Connection connection = ConnectionFactory.getConnection();
+				PreparedStatement stm = connection.prepareStatement(sql)) {
 			stm.setInt(1, id);
 			int affectedRows = stm.executeUpdate();
 

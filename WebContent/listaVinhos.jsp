@@ -5,13 +5,13 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Lista de usuários</title>
+<title>Lista de vinhos</title>
 <%@ include file="header.jsp"%>
 </head>
 <body>
 	<%@ include file="menu.jsp"%>
 	<div class="container">
-		<h1>Usuários</h1>
+		<h1>Vinhos</h1>
 		<table class="table table-striped">
 			<tr>
 				<th>Nome</th>
