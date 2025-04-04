@@ -2,78 +2,56 @@ package br.com.fiap.controller;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 
+import br.com.fiap.bean.Vinho;
+import br.com.fiap.dao.VinhoDAO;
+import br.com.fiap.exception.NotFoundException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-import br.com.fiap.bean.Vinho;
-import br.com.fiap.dao.VinhoDAO;
-import br.com.fiap.exception.NotFoundException;
-
-/**
- * Servlet implementation class VinhoServlet
- */
 @WebServlet("/vinhos")
 public class VinhoServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private VinhoDAO vinhoDAO;
-	/**
-	 * @see HttpServlet#HttpServlet()
-	 */
+
 	public VinhoServlet() {
 		super();
-		try {
-			this.vinhoDAO = new VinhoDAO();
-		} catch (SQLException e) {
-			throw new RuntimeException("Erro ao conectar ao banco", e);
-		}
+		this.vinhoDAO = new VinhoDAO();
 	}
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
-	 *      response)
-	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		response.setContentType("application/json");
-		response.setCharacterEncoding("UTF-8");
-		
-		String idVinho = request.getParameter("idVinho");
-		
-		if (idVinho != null) {
-			int id = Integer.parseInt(idVinho);
-			try {
+		String idVinhoParam = request.getParameter("idVinho");
+
+		try {
+
+			if (idVinhoParam != null) {
+				int id = Integer.parseInt(idVinhoParam);
 				Vinho vinho = vinhoDAO.getById(id);
-				System.out.println(vinho.getNomeVinho());
-			} catch (NotFoundException e) {
-				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Vinho nao encontrado");
-			} catch (SQLException e) {
-				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Erro ao buscar vinho");
-			}
-		} else {
-			try {
+				request.setAttribute("vinho", vinho);
+				request.getRequestDispatcher("editarUsuario.jsp").forward(request, response);
+			} else {
 				List<Vinho> vinhos = vinhoDAO.getAll();
 				request.setAttribute("vinhos", vinhos);
-//				request.getRequestDispatcher("listaUsuarios.jsp").forward(request, response);
-
-			} catch (SQLException e) {
-				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Erro ao buscar vinhos");
+				request.getRequestDispatcher("listaVinhos.jsp").forward(request, response);
 			}
+		} catch (NotFoundException e) {
+			System.out.println(e);
+			response.sendError(HttpServletResponse.SC_NOT_FOUND, "Vinho não encontrado.");
+		} catch (SQLException e) {
+			System.out.println(e);
+			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Erro ao buscar vinhos.");
 		}
 	}
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
-	 *      response)
-	 */
-	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		
+
 		String nomeVinho = request.getParameter("nomeVinho");
 		String fotoVinho = request.getParameter("fotoVinho");
 		String preco = request.getParameter("preco");
@@ -84,44 +62,51 @@ public class VinhoServlet extends HttpServlet {
 		String fotoBandeira = request.getParameter("fotoBandeira");
 		String blend = request.getParameter("blend");
 		String quantidadeDisponivel = request.getParameter("quantidadeDisponivel");
-		
-		if (nomeVinho != null && fotoVinho != null && preco != null && nomeVinicola != null && cidade != null 
-			&& teorAlcoolico != null && docura != null && fotoBandeira != null && blend != null && quantidadeDisponivel != null) {
-			
-			double precoAtt = Double.parseDouble(preco);
-			int quantidade = Integer.parseInt(quantidadeDisponivel);
-			
-			
-			Vinho vinho = new Vinho();
-			vinho.setNomeVinho(nomeVinho);
-			vinho.setFotoVinho(fotoVinho);
-			vinho.setPreco(precoAtt);
-			vinho.setNomeVinicola(nomeVinicola);
-			vinho.setCidade(cidade);
-			vinho.setTeorAlcoolico(teorAlcoolico);
-			vinho.setDocura(docura);
-			vinho.setFotoBandeira(fotoBandeira);
-			vinho.setBlend(blend);
-			vinho.setQuantidadeDisponivel(quantidade);
-				
-			try {
-				vinhoDAO.create(vinho);
-				response.setStatus(HttpServletResponse.SC_CREATED);
-				request.setAttribute("successMsg", "Vinho cadastrado com sucesso!");
-//				response.sendRedirect("usuarios");
-			} catch (SQLException e) {
-				System.out.println(e);
-				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Erro ao criar Vinho");
-			}
-		} else {	
-			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Parametros Inválidos");
+
+		if (nomeVinho == "" || fotoVinho == "" || preco == "" || nomeVinicola == "" || cidade == ""
+				|| teorAlcoolico == "" || docura == "" || fotoBandeira == "" || blend == ""
+				|| quantidadeDisponivel == "") {
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+			request.setAttribute("errorMsg", "Verifique os campos novamente.");
+			request.getRequestDispatcher("criarUsuario.jsp").forward(request, response);
+			return;
 		}
-		
+
+		double precoAtt = Double.parseDouble(preco);
+		int quantidade = Integer.parseInt(quantidadeDisponivel);
+
+		Vinho vinho = new Vinho();
+		vinho.setNomeVinho(nomeVinho);
+		vinho.setFotoVinho(fotoVinho);
+		vinho.setPreco(precoAtt);
+		vinho.setNomeVinicola(nomeVinicola);
+		vinho.setCidade(cidade);
+		vinho.setTeorAlcoolico(teorAlcoolico);
+		vinho.setDocura(docura);
+		vinho.setFotoBandeira(fotoBandeira);
+		vinho.setBlend(blend);
+		vinho.setQuantidadeDisponivel(quantidade);
+
+		try {
+			vinhoDAO.create(vinho);
+			response.setStatus(HttpServletResponse.SC_CREATED);
+			request.setAttribute("successMsg", "Vinho cadastrado com sucesso!");
+			request.getRequestDispatcher("criarVinho.jsp").forward(request, response);
+		} catch (SQLIntegrityConstraintViolationException e) {
+			System.out.println(e);
+			response.setStatus(HttpServletResponse.SC_CONFLICT);
+			request.setAttribute("errorMsg", "Vinho já cadastrado.");
+			request.getRequestDispatcher("criarVinho.jsp").forward(request, response);
+			return;
+		} catch (SQLException e) {
+			System.out.println(e);
+			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Erro ao criar vinho.");
+		}
 	}
-	
+
 	protected void doPut(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		
+
 		String idVinho = request.getParameter("idVinho");
 		String nomeVinho = request.getParameter("nomeVinho");
 		String fotoVinho = request.getParameter("fotoVinho");
@@ -133,54 +118,72 @@ public class VinhoServlet extends HttpServlet {
 		String fotoBandeira = request.getParameter("fotoBandeira");
 		String blend = request.getParameter("blend");
 		String quantidadeDisponivel = request.getParameter("quantidadeDisponivel");
-		
-		if (idVinho != null && nomeVinho != null && fotoVinho != null && preco != null && nomeVinicola != null
-			&& cidade != null && teorAlcoolico != null && docura != null && fotoBandeira != null && blend != null && quantidadeDisponivel != null) {
-			
-			int id = Integer.parseInt(idVinho);
-			double precoAtt = Double.parseDouble(preco);
-			int quantidade = Integer.parseInt(quantidadeDisponivel);
-			
-			Vinho vinho = new Vinho();			
-			vinho.setIdVinho(id);
-			vinho.setNomeVinho(nomeVinho);
-			vinho.setFotoVinho(fotoVinho);
-			vinho.setPreco(precoAtt);
-			vinho.setNomeVinicola(nomeVinicola);
-			vinho.setCidade(cidade);
-			vinho.setTeorAlcoolico(teorAlcoolico);
-			vinho.setDocura(docura);
-			vinho.setFotoBandeira(fotoBandeira);
-			vinho.setBlend(blend);
-			vinho.setQuantidadeDisponivel(quantidade);
-			
-			try {
-				vinhoDAO.update(vinho);
-			} catch (SQLException e) {
-				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Erro ao atualizar vinho");
-			} catch (NotFoundException e) {
-				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Vinho nao encontrado");
-			}
-		} else {
-			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Parametros inválidos");
+
+		if (idVinho == "") {
+			response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Por favor forneça o ID do vinho a ser editado.");
+			return;
+		}
+
+		if (nomeVinho == "" || fotoVinho == "" || preco == "" || nomeVinicola == "" || cidade == ""
+				|| teorAlcoolico == "" || docura == "" || fotoBandeira == "" || blend == ""
+				|| quantidadeDisponivel == "") {
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+			request.setAttribute("errorMsg", "Verifique os campos novamente.");
+			request.getRequestDispatcher("editarUsuario.jsp").forward(request, response);
+			return;
+		}
+
+		int id = Integer.parseInt(idVinho);
+		double precoAtt = Double.parseDouble(preco);
+		int quantidade = Integer.parseInt(quantidadeDisponivel);
+
+		Vinho vinho = new Vinho();
+		vinho.setIdVinho(id);
+		vinho.setNomeVinho(nomeVinho);
+		vinho.setFotoVinho(fotoVinho);
+		vinho.setPreco(precoAtt);
+		vinho.setNomeVinicola(nomeVinicola);
+		vinho.setCidade(cidade);
+		vinho.setTeorAlcoolico(teorAlcoolico);
+		vinho.setDocura(docura);
+		vinho.setFotoBandeira(fotoBandeira);
+		vinho.setBlend(blend);
+		vinho.setQuantidadeDisponivel(quantidade);
+
+		try {
+			vinhoDAO.update(vinho);
+			response.setStatus(HttpServletResponse.SC_OK);
+			request.setAttribute("successMsg", "Vinho atualizado com sucesso!");
+			request.getRequestDispatcher("editarVinho.jsp").forward(request, response);
+		} catch (SQLIntegrityConstraintViolationException e) {
+			System.out.println(e);
+			response.setStatus(HttpServletResponse.SC_CONFLICT);
+			request.setAttribute("errorMsg", "Vinho já cadastrado.");
+			request.getRequestDispatcher("editarVinho.jsp").forward(request, response);
+			return;
+		} catch (NotFoundException e) {
+			response.sendError(HttpServletResponse.SC_NOT_FOUND, "Vinho não encontrado.");
+		} catch (SQLException e) {
+			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Erro ao atualizar vinho.");
 		}
 	}
-	
-	protected void doDelete(HttpServletRequest request, HttpServletResponse response) 
+
+	protected void doDelete(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		String idVinho = request.getParameter("idVinho");
-		
+
 		if (idVinho != null) {
 			try {
 				int id = Integer.parseInt(idVinho);
 				vinhoDAO.delete(id);
-			} catch (SQLException e) {
-				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Erro ao deletar vinho");
+				response.setStatus(HttpServletResponse.SC_OK);
 			} catch (NotFoundException e) {
-				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Vinho nao encontrado");
-			} 
+				response.sendError(HttpServletResponse.SC_NOT_FOUND, "Vinho não encontrado.");
+			} catch (SQLException e) {
+				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Erro ao deletar vinho.");
+			}
 		} else {
-			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Por favor forneca o Id do usuario a ser deletado");
+			response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Por favor forneça o ID do vinho a ser deletado.");
 		}
 	}
 

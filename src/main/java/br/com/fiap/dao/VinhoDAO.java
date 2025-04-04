@@ -12,20 +12,9 @@ import br.com.fiap.exception.NotFoundException;
 import br.com.fiap.factory.ConnectionFactory;
 
 public class VinhoDAO {
-	private static Connection connection;
-
-	public VinhoDAO() throws SQLException {
-		connection = ConnectionFactory.getConnection();
-	}
-
-	public void closeConnection() throws SQLException {
-		if (connection != null && !connection.isClosed()) {
-			connection.close();
-		}
-	}
 
 	private Vinho parseVinho(ResultSet result) throws SQLException {
-		int idVinho= result.getInt("idVinho");
+		int idVinho = result.getInt("idVinho");
 		String nomeVinho = result.getString("nomeVinho");
 		String fotoVinho = result.getString("fotoVinho");
 		Double preco = result.getDouble("preco");
@@ -36,13 +25,15 @@ public class VinhoDAO {
 		String fotoBandeira = result.getString("fotoBandeira");
 		String blend = result.getString("blend");
 		int quantidadeDisponivel = result.getInt("quantidadeDisponivel");
-		return new Vinho(idVinho, nomeVinho, fotoVinho, preco, nomeVinicola, cidade, teorAlcoolico, docura, fotoBandeira, blend, quantidadeDisponivel);
+		return new Vinho(idVinho, nomeVinho, fotoVinho, preco, nomeVinicola, cidade, teorAlcoolico, docura,
+				fotoBandeira, blend, quantidadeDisponivel);
 	}
 
 	public void create(Vinho vinho) throws SQLException {
 		String sql = "INSERT INTO vinhos (nomeVinho, fotoVinho, preco, nomeVinicola, cidade, teorAlcoolico, docura, fotoBandeira, blend, quantidadeDisponivel) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-		try (PreparedStatement stm = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
+		try (Connection connection = ConnectionFactory.getConnection();
+				PreparedStatement stm = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
 			stm.setString(1, vinho.getNomeVinho());
 			stm.setString(2, vinho.getFotoVinho());
 			stm.setDouble(3, vinho.getPreco());
@@ -70,7 +61,8 @@ public class VinhoDAO {
 	public Vinho getById(int id) throws SQLException, NotFoundException {
 		String sql = "SELECT * FROM vinhos WHERE idVinho = ?";
 
-		try (PreparedStatement stm = connection.prepareStatement(sql)) {
+		try (Connection connection = ConnectionFactory.getConnection();
+				PreparedStatement stm = connection.prepareStatement(sql)) {
 			stm.setInt(1, id);
 			ResultSet result = stm.executeQuery();
 
@@ -86,16 +78,18 @@ public class VinhoDAO {
 		String sql = "SELECT * FROM vinhos";
 		List<Vinho> vinhos = new ArrayList<>();
 
-		try (PreparedStatement stm = connection.prepareStatement(sql); ResultSet result = stm.executeQuery()) {
+		try (Connection connection = ConnectionFactory.getConnection();
+				PreparedStatement stm = connection.prepareStatement(sql);
+				ResultSet result = stm.executeQuery()) {
 
 			while (result.next()) {
 				vinhos.add(parseVinho(result));
 			}
-			
+
 			for (Vinho vinho : vinhos) {
 				System.out.println("Nome:" + vinho.getNomeVinho());
 			}
-			
+
 		}
 
 		return vinhos;
@@ -106,7 +100,8 @@ public class VinhoDAO {
 				+ "nomeVinicola = ? , cidade = ? , teorAlcoolico = ? , docura = ?, "
 				+ "fotoBandeira = ?, blend = ?, quantidadeDisponivel = ?  WHERE idVinho = ?";
 
-		try (PreparedStatement stm = connection.prepareStatement(sql)) {
+		try (Connection connection = ConnectionFactory.getConnection();
+				PreparedStatement stm = connection.prepareStatement(sql)) {
 			stm.setString(1, vinho.getNomeVinho());
 			stm.setString(2, vinho.getFotoVinho());
 			stm.setDouble(3, vinho.getPreco());
@@ -130,7 +125,8 @@ public class VinhoDAO {
 	public void delete(int id) throws SQLException, NotFoundException {
 		String sql = "DELETE FROM vinhos WHERE idVinho = ?";
 
-		try (PreparedStatement stm = connection.prepareStatement(sql)) {
+		try (Connection connection = ConnectionFactory.getConnection();
+				PreparedStatement stm = connection.prepareStatement(sql)) {
 			stm.setInt(1, id);
 			int affectedRows = stm.executeUpdate();
 

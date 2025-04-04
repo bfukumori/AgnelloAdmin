@@ -5,13 +5,14 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Cadastro de usuários</title>
+<title>Edição de vinhos</title>
 <%@ include file="header.jsp"%>
 </head>
 <body>
 	<%@ include file="menu.jsp"%>
 
 	<div class="container mt-4">
+
 		<c:if test="${not empty successMsg}">
 			<div class="alert alert-success alert-dismissible fade show"
 				role="alert">
@@ -31,8 +32,7 @@
 
 		</c:if>
 		<fieldset class="card p-4 border border-0 shadow">
-			<legend class="display-5 fw-semibold mb-4">Criar
-				usuário</legend>
+			<legend class="display-5 fw-semibold mb-4">Editar vinho</legend>
 			<form action="usuarios" method="post"
 				class="d-flex flex-column gap-3">
 				<div class="form-group">
@@ -69,8 +69,8 @@
 					style="background-color: #BE2C55">
 			</form>
 		</fieldset>
+
 	</div>
-	
 	<%@ include file="footer.jsp"%>
 </body>
 </html>
