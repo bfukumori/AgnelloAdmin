@@ -1,7 +1,7 @@
 <nav class="navbar navbar-expand-lg navbar-dark p-4"
 	style="background-color: #1D2939">
 	<div class="container-fluid">
-		<a class="navbar-brand" href="home.jsp"><img alt="logo"
+		<a class="navbar-brand" href="vinhos?tela=home"><img alt="logo"
 			src="resources/img/wine-bottle.png" width="40" height="40"></a>
 		<button class="navbar-toggler" type="button" data-bs-toggle="collapse"
 			data-bs-target="#navbarNav" aria-controls="navbarNav"
