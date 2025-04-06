@@ -112,4 +112,23 @@ public class UsuarioDAO {
 			}
 		}
 	}
+	
+	public Usuario login(String email, String senha) throws SQLException, NotFoundException {
+	    String sql = "SELECT * FROM usuarios WHERE email = ? AND senha = ?";
+	    
+	    try (Connection connection = ConnectionFactory.getConnection();
+	         PreparedStatement stm = connection.prepareStatement(sql)) {
+	        
+	        stm.setString(1, email);
+	        stm.setString(2, senha);
+	        
+	        ResultSet result = stm.executeQuery();
+	        
+	        if (!result.next()) {
+	            throw new NotFoundException("Email ou senha incorretos!");
+	        }
+	        
+	        return parseUser(result);
+	    }
+	}
 }

@@ -86,7 +86,7 @@ public class UsuarioServlet extends HttpServlet {
 			usuarioDao.create(usuario);
 			response.setStatus(HttpServletResponse.SC_CREATED);
 			request.setAttribute("successMsg", "Usuário cadastrado com sucesso!");
-			request.getRequestDispatcher("criarUsuario.jsp").forward(request, response);
+			request.getRequestDispatcher("listaUsuarios.jsp").forward(request, response);
 		} catch (SQLIntegrityConstraintViolationException e) {
 			System.out.println(e);
 			response.setStatus(HttpServletResponse.SC_CONFLICT);
@@ -139,7 +139,7 @@ public class UsuarioServlet extends HttpServlet {
 			usuarioDao.update(usuario);
 			response.setStatus(HttpServletResponse.SC_OK);
 			request.setAttribute("successMsg", "Usuário atualizado com sucesso!");
-			request.getRequestDispatcher("editarUsuario.jsp").forward(request, response);
+			request.getRequestDispatcher("listaUsuarios.jsp").forward(request, response);
 		} catch (SQLIntegrityConstraintViolationException e) {
 			System.out.println(e);
 			response.setStatus(HttpServletResponse.SC_CONFLICT);

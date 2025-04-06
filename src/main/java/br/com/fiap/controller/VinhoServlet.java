@@ -27,6 +27,7 @@ public class VinhoServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		String idVinhoParam = request.getParameter("idVinho");
+		String tela = request.getParameter("tela");
 
 		try {
 
@@ -35,6 +36,10 @@ public class VinhoServlet extends HttpServlet {
 				Vinho vinho = vinhoDAO.getById(id);
 				request.setAttribute("vinho", vinho);
 				request.getRequestDispatcher("editarUsuario.jsp").forward(request, response);
+			} else if (tela != null) {
+				List<Vinho> vinhos = vinhoDAO.getAll();
+				request.setAttribute("vinhos", vinhos);
+				request.getRequestDispatcher("home.jsp").forward(request, response);
 			} else {
 				List<Vinho> vinhos = vinhoDAO.getAll();
 				request.setAttribute("vinhos", vinhos);
@@ -63,12 +68,12 @@ public class VinhoServlet extends HttpServlet {
 		String blend = request.getParameter("blend");
 		String quantidadeDisponivel = request.getParameter("quantidadeDisponivel");
 
-		if (nomeVinho == "" || fotoVinho == "" || preco == "" || nomeVinicola == "" || cidade == ""
-				|| teorAlcoolico == "" || docura == "" || fotoBandeira == "" || blend == ""
-				|| quantidadeDisponivel == "") {
+		if (nomeVinho == null || fotoVinho == null || preco == null || nomeVinicola == null || cidade == null
+				|| teorAlcoolico == null || docura == null || fotoBandeira == null || blend == null
+				|| quantidadeDisponivel == null) {
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 			request.setAttribute("errorMsg", "Verifique os campos novamente.");
-			request.getRequestDispatcher("criarUsuario.jsp").forward(request, response);
+			request.getRequestDispatcher("criarVinho.jsp").forward(request, response);
 			return;
 		}
 
@@ -91,7 +96,7 @@ public class VinhoServlet extends HttpServlet {
 			vinhoDAO.create(vinho);
 			response.setStatus(HttpServletResponse.SC_CREATED);
 			request.setAttribute("successMsg", "Vinho cadastrado com sucesso!");
-			request.getRequestDispatcher("criarVinho.jsp").forward(request, response);
+			request.getRequestDispatcher("listaVinhos.jsp").forward(request, response);
 		} catch (SQLIntegrityConstraintViolationException e) {
 			System.out.println(e);
 			response.setStatus(HttpServletResponse.SC_CONFLICT);
@@ -129,7 +134,7 @@ public class VinhoServlet extends HttpServlet {
 				|| quantidadeDisponivel == "") {
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 			request.setAttribute("errorMsg", "Verifique os campos novamente.");
-			request.getRequestDispatcher("editarUsuario.jsp").forward(request, response);
+			request.getRequestDispatcher("editarVinho.jsp").forward(request, response);
 			return;
 		}
 
@@ -154,7 +159,7 @@ public class VinhoServlet extends HttpServlet {
 			vinhoDAO.update(vinho);
 			response.setStatus(HttpServletResponse.SC_OK);
 			request.setAttribute("successMsg", "Vinho atualizado com sucesso!");
-			request.getRequestDispatcher("editarVinho.jsp").forward(request, response);
+			request.getRequestDispatcher("listaVinhos.jsp").forward(request, response);
 		} catch (SQLIntegrityConstraintViolationException e) {
 			System.out.println(e);
 			response.setStatus(HttpServletResponse.SC_CONFLICT);
