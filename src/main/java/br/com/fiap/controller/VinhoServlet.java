@@ -19,9 +19,9 @@ import jakarta.servlet.http.Part;
 
 @WebServlet("/vinhos")
 @MultipartConfig(
-    fileSizeThreshold = 1024 * 1024,     // 1MB
-    maxFileSize = 1024 * 1024 * 5,       // 5MB
-    maxRequestSize = 1024 * 1024 * 10    // 10MB
+    fileSizeThreshold = 1024 * 1024,     
+    maxFileSize = 1024 * 1024 * 5,       
+    maxRequestSize = 1024 * 1024 * 10    
 )
 public class VinhoServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
@@ -35,16 +35,22 @@ public class VinhoServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
+    	
+    	String metodo = request.getParameter("metodo");
         String idVinhoParam = request.getParameter("idVinho");
         String tela = request.getParameter("tela");
-
+        
+		if ("DELETE".equalsIgnoreCase(metodo)) {
+			doDelete(request, response);
+			return;
+		}
+		
         try {
             if (idVinhoParam != null) {
-                int id = Integer.parseInt(idVinhoParam);
+            	int id = Integer.parseInt(idVinhoParam);
                 Vinho vinho = vinhoDAO.getById(id);
-                request.setAttribute("vinho", vinho);
-                request.getRequestDispatcher("editarUsuario.jsp").forward(request, response);
+                request.setAttribute("vinhos", vinho);
+                request.getRequestDispatcher("editarVinho.jsp").forward(request, response);
             } else if (tela != null) {
                 List<Vinho> vinhos = vinhoDAO.getAll();
                 request.setAttribute("vinhos", vinhos);
@@ -69,7 +75,6 @@ public class VinhoServlet extends HttpServlet {
 
         request.setCharacterEncoding("UTF-8");
 
-        // 1. Recuperar campos do formulário
         String nomeVinho = request.getParameter("nomeVinho");
         String preco = request.getParameter("preco");
         String nomeVinicola = request.getParameter("nomeVinicola");
@@ -80,45 +85,9 @@ public class VinhoServlet extends HttpServlet {
         String blend = request.getParameter("blend");
         String quantidadeDisponivel = request.getParameter("quantidadeDisponivel");
 
-        // 2. Recuperar imagem
         Part filePart = request.getPart("fotoVinhoFile");
         String fileName = (filePart != null) ? filePart.getSubmittedFileName() : null;
 
-        // 3. DEBUG
-        System.out.println("DEBUG - DADOS DO FORMULÁRIO:");
-        System.out.println("nomeVinho: " + nomeVinho);
-        System.out.println("fileName: " + fileName);
-        System.out.println("preco: " + preco);
-        System.out.println("nomeVinicola: " + nomeVinicola);
-        System.out.println("cidade: " + cidade);
-        System.out.println("teorAlcoolico: " + teorAlcoolico);
-        System.out.println("docura: " + docura);
-        System.out.println("fotoBandeira: " + fotoBandeira);
-        System.out.println("blend: " + blend);
-        System.out.println("quantidadeDisponivel: " + quantidadeDisponivel);
-        System.out.println("-----------------------------------");
-
-        if (fotoBandeira == null || fotoBandeira.isBlank()) {
-            fotoBandeira = "https://flagcdn.com/w160/br.png";
-        }
-
-        if (nomeVinho == null || nomeVinho.isBlank() ||
-            fileName == null || fileName.isBlank() ||
-            preco == null || preco.isBlank() ||
-            nomeVinicola == null || nomeVinicola.isBlank() ||
-            cidade == null || cidade.isBlank() ||
-            teorAlcoolico == null || teorAlcoolico.isBlank() ||
-            docura == null || docura.isBlank() ||
-            blend == null || blend.isBlank() ||
-            quantidadeDisponivel == null || quantidadeDisponivel.isBlank()) {
-
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            request.setAttribute("errorMsg", "Verifique os campos novamente.");
-            request.getRequestDispatcher("criarVinho.jsp").forward(request, response);
-            return;
-        }
-
-        // 5. Salvar imagem na pasta imagens-vinhos
         String uploadPath = getServletContext().getRealPath("") + File.separator + "imagens-vinhos";
         File uploadDir = new File(uploadPath);
         if (!uploadDir.exists()) uploadDir.mkdir();
@@ -129,11 +98,10 @@ public class VinhoServlet extends HttpServlet {
 
         String fotoVinhoUrl = "imagens-vinhos/" + uniqueFileName;
 
-        // 6. Conversões numéricas
+       
         double precoAtt = Double.parseDouble(preco);
         int quantidade = Integer.parseInt(quantidadeDisponivel);
 
-        // 7. Criar objeto Vinho
         Vinho vinho = new Vinho();
         vinho.setNomeVinho(nomeVinho);
         vinho.setFotoVinho(fotoVinhoUrl);
@@ -146,7 +114,6 @@ public class VinhoServlet extends HttpServlet {
         vinho.setBlend(blend);
         vinho.setQuantidadeDisponivel(quantidade);
 
-        // 8. Inserir no banco
         try {
             vinhoDAO.create(vinho);
             response.setStatus(HttpServletResponse.SC_CREATED);
@@ -183,15 +150,6 @@ public class VinhoServlet extends HttpServlet {
 
         if (idVinho == "") {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Por favor forneça o ID do vinho a ser editado.");
-            return;
-        }
-
-        if (nomeVinho == "" || fotoVinho == "" || preco == "" || nomeVinicola == "" || cidade == ""
-                || teorAlcoolico == "" || docura == "" || fotoBandeira == "" || blend == ""
-                || quantidadeDisponivel == "") {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            request.setAttribute("errorMsg", "Verifique os campos novamente.");
-            request.getRequestDispatcher("editarVinho.jsp").forward(request, response);
             return;
         }
 
@@ -240,6 +198,7 @@ public class VinhoServlet extends HttpServlet {
                 int id = Integer.parseInt(idVinho);
                 vinhoDAO.delete(id);
                 response.setStatus(HttpServletResponse.SC_OK);
+                response.sendRedirect("vinhos");
             } catch (NotFoundException e) {
                 response.sendError(HttpServletResponse.SC_NOT_FOUND, "Vinho não encontrado.");
             } catch (SQLException e) {

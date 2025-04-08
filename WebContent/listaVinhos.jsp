@@ -16,7 +16,6 @@
 		<table class="table table-striped">
 			<tr>
 				<th>Nome do Vinho</th>
-				<th>Foto Vinho</th>
 				<th>Preço</th>
 				<th>Nome Vinicola</th>
 				<th>Cidade</th>
@@ -31,7 +30,6 @@
 			<c:forEach items="${vinhos}" var="v">
 				<tr>
 					<td>${v.nomeVinho}</td>
-					<td>${v.fotoVinho}</td>
 					<td>${v.preco}</td>
 					<td>${v.nomeVinicola}</td>
 					<td>${v.cidade}</td>
