@@ -56,7 +56,6 @@
                 updateFlagUrl(this);
             });
 
-            // Preencher imagem da bandeira se já existir valor
             const selected = select.value;
             if (selected) updateFlagUrl(select);
         }
@@ -82,15 +81,13 @@
 
     <fieldset class="card p-4 border border-0 shadow">
         <legend class="display-5 fw-semibold mb-4">Editar vinho</legend>
-        <form id="formVinho" class="needs-validation d-flex flex-column gap-3"
-              action="vinhos?id=${vinho.id}" method="post" enctype="multipart/form-data" novalidate>
-
-            <input type="hidden" name="id" value="${vinho.id}"/>
+        <form class="needs-validation d-flex flex-column gap-3"
+              action="vinhos" method="post" enctype="multipart/form-data" novalidate>
 
             <div class="form-group">
                 <label for="id-nomeVinho" class="text-secondary">Nome do Vinho</label>
                 <input type="text" name="nomeVinho" id="id-nomeVinho" class="form-control"
-                       value="${vinho.nome}" required pattern=".{3,100}">
+                       value="${vinhos.nomeVinho}">
             </div>
 
             <div class="form-group">
@@ -98,39 +95,39 @@
                 <input type="file" name="fotoVinhoFile" id="id-fotoVinho" class="form-control"
                        accept="image/*" onchange="previewImage(this)">
                 <div class="mt-2">
-                    <img id="fotoPreview" src="${vinho.foto}" alt="Foto atual do vinho"
+                    <img id="fotoPreview" src="${vinhos.fotoVinho}" alt="Foto atual do vinho"
                          style="max-width: 160px; height: auto; ${empty vinho.foto ? 'display: none;' : ''}">
                 </div>
             </div>
 
             <div class="form-group">
                 <label for="id-preco" class="text-secondary">Preço</label>
-                <input type="number" step="0.01" min="0.01" name="preco" id="id-preco" class="form-control"
-                       value="${vinho.preco}" required>
+                <input type="number" name="preco" id="id-preco" class="form-control"
+                       value="${vinhos.preco}" required>
             </div>
 
             <div class="form-group">
                 <label for="id-nomeVinicola" class="text-secondary">Nome da Vinícola</label>
                 <input type="text" name="nomeVinicola" id="id-nomeVinicola" class="form-control"
-                       value="${vinho.vinicola}" required pattern=".{3,100}">
+                       value="${vinhos.nomeVinicola}" required>
             </div>
 
             <div class="form-group">
                 <label for="id-cidade" class="text-secondary">Cidade</label>
                 <input type="text" name="cidade" id="id-cidade" class="form-control"
-                       value="${vinho.cidade}" required pattern=".{3,100}">
+                       value="${vinhos.cidade}" required>
             </div>
 
             <div class="form-group">
                 <label for="id-teorAlcoolico" class="text-secondary">Teor Alcoólico</label>
                 <input type="text" name="teorAlcoolico" id="id-teorAlcoolico" class="form-control"
-                       value="${vinho.teorAlcoolico}" required>
+                       value="${vinhos.teorAlcoolico}" required>
             </div>
 
             <div class="form-group">
                 <label for="id-docura" class="text-secondary">Doçura</label>
                 <input type="text" name="docura" id="id-docura" class="form-control"
-                       value="${vinho.docura}" required pattern=".{3,50}">
+                       value="${vinhos.docura}" required>
             </div>
 
             <div class="form-group">
@@ -151,7 +148,7 @@
                 </select>
                 <input type="hidden" name="fotoBandeira" id="fotoBandeira" value="${vinho.fotoBandeira}">
                 <div class="mt-2">
-                    <img id="flagPreview" src="${vinho.fotoBandeira}" alt="Bandeira do país"
+                    <img id="flagPreview" src="${vinhos.fotoBandeira}" alt="Bandeira do país"
                          style="max-width: 160px; height: auto; ${empty vinho.fotoBandeira ? 'display: none;' : ''}">
                 </div>
             </div>
@@ -159,13 +156,13 @@
             <div class="form-group">
                 <label for="id-blend" class="text-secondary">Blend</label>
                 <input type="text" name="blend" id="id-blend" class="form-control"
-                       value="${vinho.blend}" required pattern=".{3,200}">
+                       value="${vinhos.blend}" required>
             </div>
 
             <div class="form-group">
                 <label for="id-quantidadeDisponivel" class="text-secondary">Quantidade Disponível</label>
                 <input type="number" name="quantidadeDisponivel" id="id-quantidadeDisponivel" class="form-control"
-                       value="${vinho.quantidadeDisponivel}" required min="0" step="1">
+                       value="${vinhos.quantidadeDisponivel}" required>
             </div>
 
             <input type="submit" value="Atualizar" class="btn btn-primary border border-0" style="background-color: #BE2C55">
