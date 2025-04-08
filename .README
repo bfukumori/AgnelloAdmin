@@ -1,0 +1,118 @@
+# AgnelloAdmin
+
+Uma aplicação web Java para gerenciamento de vinhos e administração de usuários.
+
+## Visão Geral do Projeto
+
+AgnelloAdmin é uma aplicação web construída usando tecnologias Java EE, projetada para gerenciar inventário de vinhos e administração de usuários. A aplicação utiliza JSP (JavaServer Pages) para o frontend e segue uma arquitetura MVC tradicional.
+
+## Stack Tecnológico
+
+- Java SE 21
+- Apache Tomcat 11.0.4
+- JSP (JavaServer Pages)
+- JSTL (Jakarta Standard Tag Library)
+- Servlet API
+
+## Estrutura do Projeto
+
+```
+AgnelloAdmin/
+├── src/main/java/br/com/fiap/
+│   ├── controller/    # Classes controladoras
+│   ├── dao/          # Objetos de Acesso a Dados
+│   ├── bean/         # Java Beans
+│   ├── exception/    # Exceções personalizadas
+│   └── factory/      # Classes fábrica
+├── WebContent/
+│   ├── *.jsp         # Páginas JSP
+│   ├── resources/    # Recursos estáticos
+│   └── WEB-INF/      # Arquivos de configuração
+```
+
+## Pré-requisitos
+
+- Java SE 21 ou superior
+- Apache Tomcat 11.0.4
+- Eclipse IDE (recomendado)
+- Maven (para gerenciamento de dependências)
+
+## Instruções de Configuração
+
+1. **Configuração do Ambiente**
+   - Instale o Java SE 21
+   - Instale o Apache Tomcat 11.0.4
+   - Instale o Eclipse IDE
+
+2. **Importação do Projeto**
+   - Clone o repositório
+   - Importe o projeto no Eclipse como um projeto existente
+   - Configure os facets do projeto para Dynamic Web Module
+
+3. **Configuração do Servidor**
+   - Adicione o Apache Tomcat 11.0.4 como servidor no Eclipse
+   - Configure o projeto para usar o servidor Tomcat
+   - Defina o ambiente de execução do servidor
+
+4. **Dependências**
+   - O projeto utiliza bibliotecas JSTL que estão incluídas no projeto
+   - Certifique-se de que os seguintes JARs estão no diretório WEB-INF/lib:
+     - jakarta.servlet.jsp.jstl-3.0.1.jar
+     - jakarta.servlet.jsp.jstl-api-3.0.2.jar
+
+5. **Executando a Aplicação**
+   - Inicie o servidor Tomcat
+   - Faça o deploy da aplicação
+   - Acesse a aplicação através de: `http://localhost:8080/AgnelloAdmin`
+
+## Funcionalidades
+
+### Gerenciamento de Usuários
+- **Criação de Usuários**
+  - Cadastro de novos usuários com informações pessoais
+  - Definição de níveis de acesso e permissões
+  - Validação de dados de entrada
+  - Confirmação de senha e segurança
+
+- **Edição de Usuários**
+  - Atualização de informações do usuário
+  - Modificação de permissões e níveis de acesso
+  - Alteração de senha com validação
+  - Histórico de alterações
+
+- **Listagem de Usuários**
+  - Visualização de todos os usuários cadastrados
+  - Filtros por nome, nível de acesso e status
+  - Paginação de resultados
+  - Exportação de dados
+
+### Gerenciamento de Vinhos
+- **Cadastro de Vinhos**
+  - Inclusão de novos vinhos com detalhes completos
+  - Upload de imagens do produto
+  - Categorização por tipo, região e safra
+  - Gestão de estoque e preços
+
+- **Edição de Vinhos**
+  - Atualização de informações do vinho
+  - Modificação de preços e estoque
+  - Alteração de imagens e descrições
+  - Histórico de alterações
+
+- **Listagem de Vinhos**
+  - Visualização de todos os vinhos cadastrados
+  - Filtros por tipo, região, safra e preço
+  - Paginação de resultados
+  - Exportação de dados para relatórios
+
+## Arquitetura do Projeto
+
+O projeto segue uma arquitetura MVC (Model-View-Controller) tradicional:
+- **Model**: Java Beans no pacote `bean`
+- **View**: Arquivos JSP no diretório `WebContent`
+- **Controller**: Classes Servlet no pacote `controller`
+- **DAO**: Objetos de Acesso a Dados no pacote `dao` para operações de banco de dados
+
+## Licença
+
+Este projeto está licenciado sob a Licença MIT - veja o arquivo LICENSE para detalhes. 
