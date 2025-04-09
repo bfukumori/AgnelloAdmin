@@ -166,6 +166,8 @@
             </div>
 
             <input type="submit" value="Atualizar" class="btn btn-primary border border-0" style="background-color: #BE2C55">
+            <input type="hidden" name="method" value="PUT">
+                <input type="hidden" name="idVinho" value="${vinhos.idVinho}">
         </form>
     </fieldset>
 </div>

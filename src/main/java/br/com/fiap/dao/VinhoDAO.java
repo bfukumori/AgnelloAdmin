@@ -86,10 +86,6 @@ public class VinhoDAO {
 				vinhos.add(parseVinho(result));
 			}
 
-			for (Vinho vinho : vinhos) {
-				System.out.println("Nome:" + vinho.getNomeVinho());
-			}
-
 		}
 
 		return vinhos;
