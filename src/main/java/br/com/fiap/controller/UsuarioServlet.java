@@ -41,6 +41,7 @@ public class UsuarioServlet extends HttpServlet {
 				int id = Integer.parseInt(idUsuarioParam);
 				Usuario usuario = usuarioDao.getById(id);
 				request.setAttribute("usuario", usuario);
+				request.setAttribute("idUsuario", id);
 				request.getRequestDispatcher("editarUsuario.jsp").forward(request, response);
 			} else {
 				List<Usuario> usuarios = usuarioDao.getAll();
@@ -58,6 +59,13 @@ public class UsuarioServlet extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		String idUsuario = request.getParameter("idUsuario");
+
+		if (idUsuario != null) {
+			doPut(request, response);
+			return;
+		}
+
 		String nome = request.getParameter("nome");
 		String email = request.getParameter("email");
 		String celular = request.getParameter("celular");
@@ -86,6 +94,8 @@ public class UsuarioServlet extends HttpServlet {
 			usuarioDao.create(usuario);
 			response.setStatus(HttpServletResponse.SC_CREATED);
 			request.setAttribute("successMsg", "Usuário cadastrado com sucesso!");
+			List<Usuario> usuarios = usuarioDao.getAll();
+			request.setAttribute("usuarios", usuarios);
 			request.getRequestDispatcher("listaUsuarios.jsp").forward(request, response);
 		} catch (SQLIntegrityConstraintViolationException e) {
 			System.out.println(e);
@@ -102,7 +112,6 @@ public class UsuarioServlet extends HttpServlet {
 
 	protected void doPut(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-
 		String idUsuario = request.getParameter("idUsuario");
 		String nome = request.getParameter("nome");
 		String email = request.getParameter("email");
@@ -139,6 +148,8 @@ public class UsuarioServlet extends HttpServlet {
 			usuarioDao.update(usuario);
 			response.setStatus(HttpServletResponse.SC_OK);
 			request.setAttribute("successMsg", "Usuário atualizado com sucesso!");
+			List<Usuario> usuarios = usuarioDao.getAll();
+			request.setAttribute("usuarios", usuarios);
 			request.getRequestDispatcher("listaUsuarios.jsp").forward(request, response);
 		} catch (SQLIntegrityConstraintViolationException e) {
 			System.out.println(e);

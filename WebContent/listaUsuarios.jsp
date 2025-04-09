@@ -36,7 +36,7 @@
 						</c:choose></td>
 					<td><fmt:formatDate value="${u.dataAniversario}"
 							pattern="dd/MM/yyyy" timeZone="America/Sao_Paulo" /></td>
-					<td><a href="usuarios?idUsuario=${u.idUsuario}"
+					<td><a href="usuarios?idUsuario=${u.idUsuario}&metodo=PUT"
 						class="btn btn-outline-primary">Editar</a></td>
 					<td><a href="usuarios?idUsuario=${u.idUsuario}&metodo=DELETE"
 						class="btn btn-outline-danger">Deletar</a></td>

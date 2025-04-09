@@ -68,6 +68,8 @@
 				<input type="submit" value="Salvar"
 					class="btn btn-primary border border-0"
 					style="background-color: #BE2C55">
+					<input type="hidden" name="method" value="PUT">
+                <input type="hidden" name="idUsuario" value="${usuario.idUsuario}">
 			</form>
 		</fieldset>
 	</div>
