@@ -18,11 +18,13 @@
 			<c:forEach items="${vinhos}" var="v">
 				<div class="col">
 					<div class="card h-100 shadow-sm">
+						<c:if test="${v.fotoVinho}">
 						<div class="text-center p-3">
 							<img src="${v.fotoVinho}" class="card-img-top"
 								alt="${v.nomeVinho}"
 								style="max-height: 200px; object-fit: contain;">
 						</div>
+						</c:if>
 						<div class="card-body">
 							<div
 								class="d-flex justify-content-between align-items-center mb-2">
@@ -40,11 +42,6 @@
 								<h4 class="text-primary">R$ ${v.preco}</h4>
 								<span class="badge bg-success">${v.quantidadeDisponivel}
 									em estoque</span>
-							</div>
-						</div>
-						<div class="card-footer">
-							<div class="d-grid gap-2">
-								<button class="btn btn-outline-primary">Detalhes</button>
 							</div>
 						</div>
 					</div>
