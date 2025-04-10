@@ -151,6 +151,8 @@ public class VinhoServlet extends HttpServlet {
             vinhoDAO.create(vinho);
             response.setStatus(HttpServletResponse.SC_CREATED);
             request.setAttribute("successMsg", "Vinho cadastrado com sucesso!");
+            List<Vinho> vinhos = vinhoDAO.getAll();
+            request.setAttribute("vinhos", vinhos);
             request.getRequestDispatcher("listaVinhos.jsp").forward(request, response);
         } catch (SQLIntegrityConstraintViolationException e) {
             System.out.println("Erro: Vinho já cadastrado.");
@@ -216,6 +218,8 @@ public class VinhoServlet extends HttpServlet {
             vinhoDAO.update(vinho);
             response.setStatus(HttpServletResponse.SC_OK);
             request.setAttribute("successMsg", "Vinho atualizado com sucesso!");
+            List<Vinho> vinhos = vinhoDAO.getAll();
+            request.setAttribute("vinhos", vinhos);
             request.getRequestDispatcher("listaVinhos.jsp").forward(request, response);
         } catch (SQLIntegrityConstraintViolationException e) {
             System.out.println(e);

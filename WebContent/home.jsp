@@ -42,11 +42,6 @@
 									em estoque</span>
 							</div>
 						</div>
-						<div class="card-footer">
-							<div class="d-grid gap-2">
-								<button class="btn btn-outline-primary">Detalhes</button>
-							</div>
-						</div>
 					</div>
 				</div>
 			</c:forEach>
