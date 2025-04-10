@@ -5,7 +5,6 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class ConnectionFactory {
-
 	private static final String URL = "jdbc:mysql://145.223.95.225:3306/fiapdb";
 	private static final String USER = "fiapuser";
 	private static final String PWD = "userpass";
